@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Contactpage extends StatelessWidget {
+class ContactPage extends StatelessWidget {
+  Future<void> _callNumber(String number) async {
+    await FlutterPhoneDirectCaller.callNumber(number);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Contacts", style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
+        title: Text(
+          "Contacts",
+          style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -16,7 +28,9 @@ class Contactpage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Helpline", style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text("Helpline",
+                style: GoogleFonts.montserrat(
+                    fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Expanded(
               child: ListView(
@@ -27,10 +41,15 @@ class Contactpage extends StatelessWidget {
                   helplineTile("Emergency", "112", Icons.warning),
                   helplineTile("Ambulance", "108", Icons.accessible),
                   SizedBox(height: 20),
-                  Text("Emergency Contacts", style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
-                  emergencyContactTile("Contact 1", "Amma", "assets/contact1.jpg"),
-                  emergencyContactTile("Contact 2", "Sister", "assets/contact2.jpg"),
-                  emergencyContactTile("Contact 3", "Friend", "assets/contact3.jpg"),
+                  Text("Emergency Contacts",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  emergencyContactTile(
+                      "Amma", "1234567890", "assets/contact1.jpg", "1234567890"),
+                  emergencyContactTile(
+                      "Appa", "6789012345", "assets/contact2.jpg", "6789012345"),
+                  emergencyContactTile(
+                      "Anna", "5432167890", "assets/contact3.jpg", "5432167890"),
                 ],
               ),
             ),
@@ -43,7 +62,14 @@ class Contactpage extends StatelessWidget {
         },
         backgroundColor: Colors.purple[100],
         icon: Icon(Icons.add, color: Colors.black),
-        label: Text("Add contact", style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),),
+        label: Text(
+          "Add contact",
+          style: GoogleFonts.montserrat(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }
@@ -54,23 +80,36 @@ class Contactpage extends StatelessWidget {
         backgroundColor: Colors.purple[100],
         child: Icon(icon, color: Colors.purple[800]),
       ),
-      title: Text(title, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500)),
-      subtitle: Text(number, style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+      title: Text(
+        title,
+        style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+      subtitle: Text(
+        number,
+        style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
+      ),
       trailing: Icon(Icons.call, color: Colors.black),
       onTap: () {
-        // TODO: Implement Call Function
+        _callNumber(number);
       },
     );
   }
 
-  Widget emergencyContactTile(String name, String relation, String image) {
+  Widget emergencyContactTile(
+      String name, String relation, String image, String number) {
     return ListTile(
       leading: CircleAvatar(backgroundImage: AssetImage(image)),
-      title: Text(name, style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500)),
-      subtitle: Text(relation, style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+      title: Text(
+        name,
+        style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+      subtitle: Text(
+        relation,
+        style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
+      ),
       trailing: Icon(Icons.call, color: Colors.black),
       onTap: () {
-        // TODO: Implement Call Function
+        _callNumber(number);
       },
     );
   }
