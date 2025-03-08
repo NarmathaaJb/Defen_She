@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
   final user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +114,27 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 40),
               LiveSafeSection(), // Added LiveSafe Section here
               const SizedBox(height: 20),
+              Positioned(
+                bottom: 30,
+                right: 20,
+                child: ElevatedButton(
+                  onPressed: () {
+                // TODO: Implement SafetyBot functionality
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple[100],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30, 
+                      vertical: 0
+                    ),
+                  ),
+                  child: Text(
+                    "SafetyBot",
+                    style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
