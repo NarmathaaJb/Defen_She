@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "467677134812",
+    "project_id": "defenshe-app",
+    "storage_bucket": "defenshe-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467677134812:android:fbbc1fe2b1adb6180e1919",
+        "android_client_info": {
+          "package_name": "com.example.defenshe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS3xPNaU9vAbOjPq5L5t5qQndawvTkh8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
