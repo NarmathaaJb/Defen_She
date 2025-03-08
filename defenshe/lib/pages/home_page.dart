@@ -23,21 +23,18 @@ class HomePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          "Hi, Sophia",
-          style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
+          "Hi, ${user?.displayName ?? 'User'}",
+          style: GoogleFonts.montserrat(
+              fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.logout, color: Colors.black
-            ), // Logout icon
+            icon: const Icon(Icons.logout, color: Colors.black), // Logout icon
             onPressed: () async {
-              await FirebaseAuth.instance.signOut(); // Sign out user
+              await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => AuthPage()
-                ), // Navigate to AuthPage
+                MaterialPageRoute(builder: (context) => AuthPage()),
               );
             },
           ),
@@ -52,14 +49,16 @@ class HomePage extends StatelessWidget {
               children: [
                 Text(
                   "Stay Safe and Secure",
-                  style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: GoogleFonts.poppins(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 GestureDetector(
                   onTap: () {
-                    // TODO: Implement SOS functionality
-                    print("SOS Button Pressed!");
+                    debugPrint("SOS Button Pressed!");
                   },
                   child: Center(
                     child: Container(
@@ -79,25 +78,31 @@ class HomePage extends StatelessWidget {
                       child: Center(
                         child: Text(
                           "SOS",
-                          style: GoogleFonts.poppins(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.poppins(
+                              fontSize: 36,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 Text(
                   "Press the SOS button",
-                  style: GoogleFonts.nunito(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+                  style: GoogleFonts.nunito(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[800]),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 90),
+                const SizedBox(height: 70),
                 OptionTile(
                   icon: Icons.location_on,
                   title: "Nearby police",
                   subtitle: "Find the nearest police station",
                   onTap: () {
-                    // TODO: Implement navigation to police location
+                    debugPrint("Navigate to police location");
                   },
                 ),
                 OptionTile(
@@ -105,7 +110,7 @@ class HomePage extends StatelessWidget {
                   title: "Women helpline",
                   subtitle: "For women in distress",
                   onTap: () {
-                    // TODO: Implement helpline functionality
+                    debugPrint("Call women helpline");
                   },
                 ),
               ],
@@ -116,16 +121,21 @@ class HomePage extends StatelessWidget {
             right: 20,
             child: ElevatedButton(
               onPressed: () {
-                // TODO: Implement SafetyBot functionality
+                debugPrint("SafetyBot activated");
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple[100],
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               ),
               child: Text(
                 "SafetyBot",
-                style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+                style: GoogleFonts.montserrat(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
               ),
             ),
           ),
@@ -136,39 +146,39 @@ class HomePage extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        
         onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ContactPage()),
-            );
-          }
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CommunityPage()),
-            );
-          }
-          if (index == 4) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const AuthPage()),
-            );
+          switch (index) {
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ContactPage()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CommunityPage()),
+              );
+              break;
+            case 3: // Logout
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => AuthPage()),
+              );
+              break;
           }
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.call), label: "Contacts"),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: "Community"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
           BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout"),
         ],
       ),
     );
   }
 }
-
 
 class OptionTile extends StatelessWidget {
   final IconData icon;
@@ -177,6 +187,7 @@ class OptionTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const OptionTile({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -185,15 +196,22 @@ class OptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.purple, size: 30),
-        title: Text(title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle, style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey)),
-        trailing: Icon(Icons.arrow_forward_ios, color: Colors.black, size: 18),
-        onTap: onTap,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: ListTile(
+          leading: Icon(icon, color: Colors.purple, size: 30),
+          title: Text(title,
+              style: GoogleFonts.poppins(
+                  fontSize: 16, fontWeight: FontWeight.bold)),
+          subtitle: Text(subtitle,
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey)),
+          trailing:
+              const Icon(Icons.arrow_forward_ios, color: Colors.black, size: 18),
+          onTap: onTap,
+        ),
       ),
     );
   }
