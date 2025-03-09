@@ -1,6 +1,7 @@
 import 'package:defenshe/pages/auth_page.dart';
 import 'package:defenshe/pages/community_page.dart';
 import 'package:defenshe/pages/contact_page.dart';
+import 'package:defenshe/pages/safetyBot.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -139,13 +140,16 @@ class HomePage extends StatelessWidget {
                 right: 20,
                 child: ElevatedButton(
                   onPressed: () {
-                // TODO: Implement SafetyBot functionality
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SafetyBot()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple[100],
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(
-                      horizontal: 30, 
+                      horizontal: 30,
                       vertical: 0
                     ),
                   ),
