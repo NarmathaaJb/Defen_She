@@ -1,3 +1,8 @@
+import 'package:defenshe/pages/community_pages/awareness.dart';
+import 'package:defenshe/pages/community_pages/counseling.dart';
+import 'package:defenshe/pages/community_pages/safety_tips.dart';
+import 'package:defenshe/pages/community_pages/self_defence.dart';
+import 'package:defenshe/pages/community_pages/support_group.dart';
 import 'package:flutter/material.dart';
 
 class CommunityPage extends StatelessWidget {
@@ -30,30 +35,59 @@ class CommunityPage extends StatelessWidget {
               title: "Self Defence",
               description: "Learn how to protect yourself and your loved ones.",
               buttonText: "Join Now",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SelfDefence()),
+                );
+              },
             ),
             CommunityCard(
               imagePath: "assets/images/awareness.jpeg",
               title: "Awareness",
               description: "Understand the issue and learn how to help others.",
-              buttonText: "Explore",
+              buttonText: "Explore", onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Awareness()),
+                );
+                },
             ),
             CommunityCard(
               imagePath: "assets/images/safety_tips.jpg",
               title: "Safety Tips",
               description: "Get tips on how to stay safe in various situations.",
               buttonText: "Read More",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SafetyTips()),
+                );
+              },
             ),
             CommunityCard(
               imagePath: "assets/images/support_group.jpg",
               title: "Support Groups",
               description: "Join discussions and share experiences with others.",
               buttonText: "Get Involved",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SupportGroup()),
+                );
+              },
             ),
             CommunityCard(
               imagePath: "assets/images/counseling.jpeg",
               title: "Counseling",
               description: "Connect with mentors and get guidance.",
               buttonText: "Connect Now",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Counseling()),
+                );
+              },
             ),
           ],
         ),
@@ -68,6 +102,7 @@ class CommunityCard extends StatelessWidget {
   final String title;
   final String description;
   final String buttonText;
+  final VoidCallback onTap;
 
   const CommunityCard({
     super.key,
@@ -75,6 +110,7 @@ class CommunityCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.buttonText,
+    required this.onTap,
   });
 
   @override
@@ -102,7 +138,7 @@ class CommunityCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onTap,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.purple.shade400,
