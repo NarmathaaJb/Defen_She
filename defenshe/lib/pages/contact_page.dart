@@ -13,13 +13,13 @@ class ContactPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Contacts",
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.arimo(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 218, 140, 232),
+        backgroundColor: Colors.deepPurple.shade400,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
@@ -35,7 +35,7 @@ class ContactPage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  helplineTile("Women Helpline", "1090", Icons.shield),
+                  helplineTile("Women Helpline", "1090", Icons.woman_2_outlined),
                   helplineTile("Police", "100", Icons.local_police),
                   helplineTile("Domestic Abuse", "1091", Icons.security),
                   helplineTile("Emergency", "112", Icons.warning),
@@ -45,11 +45,11 @@ class ContactPage extends StatelessWidget {
                       style: GoogleFonts.montserrat(
                           fontSize: 18, fontWeight: FontWeight.bold)),
                   emergencyContactTile(
-                      "Amma", "1234567890", "assets/contact1.jpg", "1234567890"),
+                      "Amma", "1234567890", "assets/images/mom_profile.jpg", "1234567890"),
                   emergencyContactTile(
-                      "Appa", "6789012345", "assets/contact2.jpg", "6789012345"),
+                      "Appa", "6789012345", "assets/images/dad_profile.jpg", "6789012345"),
                   emergencyContactTile(
-                      "Anna", "5432167890", "assets/contact3.jpg", "5432167890"),
+                      "Akka", "5432167890", "assets/images/sis_profile.webp", "5432167890"),
                 ],
               ),
             ),
@@ -60,7 +60,7 @@ class ContactPage extends StatelessWidget {
         onPressed: () {
           // TODO: Implement Add Contact functionality
         },
-        backgroundColor: Colors.purple[100],
+        backgroundColor: Colors.deepPurple.shade300,
         icon: Icon(Icons.add, color: Colors.black),
         label: Text(
           "Add contact",

@@ -31,17 +31,17 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 218, 140, 232),
+        backgroundColor: Colors.deepPurple.shade400,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
-            backgroundImage: AssetImage('assets/profile.jpg'),
+            backgroundImage: AssetImage('assets/images/profile_defenshe.jpg'),
           ),
         ),
         title: Text(
           "Hi, ${user?.displayName ?? 'User'}",
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.arimo(
               fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
         ),
         actions: [

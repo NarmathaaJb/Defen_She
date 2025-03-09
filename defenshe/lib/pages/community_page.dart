@@ -12,10 +12,10 @@ class CommunityPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Community"),
+        title: const Text("Community", style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 218, 140, 232),
+        backgroundColor: Colors.deepPurple.shade400,
         foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(

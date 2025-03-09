@@ -26,10 +26,10 @@ class _SafetyBotState extends State<SafetyBot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 218, 140, 232),
+        backgroundColor: Colors.deepPurple.shade400,
         title: Text(
           "SafetyBot",
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 26, 25, 25)),
+          style: GoogleFonts.poppins(fontSize: 20, color:  Colors.black),
         ),
       ),
       body: Column(

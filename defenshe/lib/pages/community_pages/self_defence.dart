@@ -10,7 +10,7 @@ class SelfDefence extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Self Defence"),
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 218, 140, 232),
+        backgroundColor: Colors.deepPurple.shade400,
         foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -51,6 +51,11 @@ class SelfDefence extends StatelessWidget {
               imagePath: "assets/images/elbow_strike.jpg",
               title: "Elbow Strike",
               description: "Use your elbow to hit the attacker’s face or ribs.",
+            ),
+            SelfDefenceTechnique(
+              imagePath: "assets/images/front_kick.jpg",
+              title: "Front Kick",
+              description: "A front kick to the groin can be a very effective self-defense tool because of the vulnerable area it targets",
             ),
             const SizedBox(height: 20),
 
@@ -124,7 +129,7 @@ class SelfDefenceTechnique extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
+      elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
