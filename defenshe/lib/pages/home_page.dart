@@ -3,11 +3,27 @@ import 'package:defenshe/pages/community_page.dart';
 import 'package:defenshe/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
   final user = FirebaseAuth.instance.currentUser;
+
+  static Future<void> openMap(String location) async{
+    String googleUrl = 'https://www.google.com/maps/search/$location';
+    final Uri _url = Uri.parse(googleUrl);
+    try{
+      await launchUrl(_url);
+    }
+    catch(e){
+      Fluttertoast.showToast(msg: 'Something went wrong! Call Emergency numbers');
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +110,7 @@ class HomePage extends StatelessWidget {
                     color: Colors.grey[800]),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               OptionTile(
                 icon: Icons.location_on,
                 title: "Nearby police",
@@ -138,7 +154,6 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        
       ),
 
       
@@ -186,16 +201,16 @@ class HomePage extends StatelessWidget {
 // ===========================
 class LiveSafeSection extends StatelessWidget {
   final List<Map<String, dynamic>> liveSafeOptions = [
-    {"icon": Icons.local_police, "label": "Police Stations"},
-    {"icon": Icons.local_hospital, "label": "Hospitals"},
-    {"icon": Icons.local_pharmacy, "label": "Pharmacy"},
-    {"icon": Icons.directions_bus, "label": "Bus Stops"},
+    {"icon": Icons.local_police, "label": "Police Stations", "search": "police stations near me"},
+    {"icon": Icons.local_hospital, "label": "Hospitals", "search": "hospitals near me"},
+    {"icon": Icons.local_pharmacy, "label": "Pharmacy", "search": "pharmacy near me"},
+    {"icon": Icons.directions_bus, "label": "Bus Stops", "search": "bus stops near me"},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -215,7 +230,7 @@ class LiveSafeSection extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      debugPrint("Navigating to ${option["label"]}");
+                      HomePage.openMap(option["search"]);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(12),
