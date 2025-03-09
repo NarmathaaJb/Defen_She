@@ -19,12 +19,12 @@ class ContactPage extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 218, 140, 232),
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: 20,horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
