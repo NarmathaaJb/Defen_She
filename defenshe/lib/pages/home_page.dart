@@ -3,6 +3,7 @@ import 'package:defenshe/pages/community_page.dart';
 import 'package:defenshe/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -116,15 +117,18 @@ class HomePage extends StatelessWidget {
                 title: "Nearby police",
                 subtitle: "Find the nearest police station",
                 onTap: () {
-                  debugPrint("Navigate to police location");
+                  HomePage.openMap("police station near me");
                 },
               ),
               OptionTile(
                 icon: Icons.phone,
                 title: "Women helpline",
                 subtitle: "For women in distress",
-                onTap: () {
-                  debugPrint("Call women helpline");
+                onTap: () async {
+                  bool? res = await FlutterPhoneDirectCaller.callNumber("1091");
+                  if (res == null || !res) {
+                    Fluttertoast.showToast(msg: "Cannot place call. Try manually.");
+                  }
                 },
               ),
               const SizedBox(height: 40),
