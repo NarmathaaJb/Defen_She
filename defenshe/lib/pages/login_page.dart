@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// import your home page
+import 'home_page.dart'; // replace with actual home page import
 
 class LoginPage extends StatefulWidget {
-  final void Function() ? onPressed;
+  final void Function()? onPressed;
   const LoginPage({super.key, required this.onPressed});
 
   @override
@@ -12,97 +14,118 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool _isPasswordVisible = false;
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-  signInWithEmailAndPassword() async{
+  Future<void> signInWithEmailAndPassword() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      setState(() {
-        isLoading = true;
-      });
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _email.text,
-        password: _password.text,
+        email: _email.text.trim(),
+        password: _password.text.trim(),
       );
-      setState(() {
-        isLoading = false;
-      });
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      if (e.code == 'user-not-found') {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("No user found for that email."))
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+
+      if (mounted) {
+        // Navigate to home page after successful login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-      else if (e.code == 'wrong-password') {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Wrong password provided for that user."))
-        );
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        String message = "Login failed!";
+        if (e.code == 'user-not-found') {
+          message = "No user found for that email.";
+        } else if (e.code == 'wrong-password') {
+          message = "Wrong password provided.";
+        }
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
       }
     }
   }
-  
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Login"),
-      ),
+      appBar: AppBar(centerTitle: true, title: const Text("Login")),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
-            child: OverflowBar(
-              overflowSpacing: 20,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
                   controller: _email,
-                  validator: (text){
-                    if(text == null || text.isEmpty){
-                      return 'Email is empty';
-                    }
-                    return null;
-                  },
+                  validator: (text) =>
+                      text == null || text.isEmpty ? 'Email is empty' : null,
                   decoration: const InputDecoration(hintText: "Email"),
+                  keyboardType: TextInputType.emailAddress,
                 ),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _password,
-                  validator: (text){
-                    if(text == null || text.isEmpty){
-                      return 'Password is empty';
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(hintText: "Password"),
+                  obscureText: !_isPasswordVisible,
+                  validator: (text) =>
+                      text == null || text.isEmpty ? 'Password is empty' : null,
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    suffixIcon: IconButton(
+                      icon: Icon(_isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
                 ),
+                const SizedBox(height: 30),
                 SizedBox(
                   width: double.infinity,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: (){
-                      if(_formKey.currentState!.validate()){
-                        signInWithEmailAndPassword();
-                      }
-                    },
+                    onPressed: isLoading ? null : signInWithEmailAndPassword,
                     child: isLoading
-                    ? const Center(child: CircularProgressIndicator(color: Colors.white,),)
-                    : const Text("Login"),
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Login"),
                   ),
                 ),
-
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   height: 45,
-                  child: ElevatedButton(
-                    onPressed:widget.onPressed,
-                    child: const Text("SignUp"),
+                  child: OutlinedButton(
+                    onPressed: widget.onPressed,
+                    child: const Text("Sign Up"),
                   ),
-                )
+                ),
               ],
             ),
           ),

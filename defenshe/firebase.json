@@ -1,1 +1,14 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"defenshe-app","appId":"1:467677134812:android:fbbc1fe2b1adb6180e1919","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"defenshe-app","configurations":{"android":"1:467677134812:android:fbbc1fe2b1adb6180e1919","ios":"1:467677134812:ios:f49b17581cc2df160e1919","macos":"1:467677134812:ios:f49b17581cc2df160e1919","web":"1:467677134812:web:82954fd2652883580e1919","windows":"1:467677134812:web:b5741a9dbb9a43850e1919"}}}}}}
+{"flutter":{
+    "platforms":{
+        "android":{
+            "default":{
+                "projectId":"defenshe-app",
+                "appId":"1:467677134812:android:fbbc1fe2b1adb6180e1919",
+                "fileOutput":"android/app/google-services.json"}},
+                "dart":{"lib/firebase_options.dart":{
+                    "projectId":"defenshe-app","configurations":{
+                        "android":"1:467677134812:android:fbbc1fe2b1adb6180e1919",
+                        "ios":"1:467677134812:ios:f49b17581cc2df160e1919",
+                        "macos":"1:467677134812:ios:f49b17581cc2df160e1919",
+                        "web":"1:467677134812:web:82954fd2652883580e1919",
+                        "windows":"1:467677134812:web:b5741a9dbb9a43850e1919"}}}}}}

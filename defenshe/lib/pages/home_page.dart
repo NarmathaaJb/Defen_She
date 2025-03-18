@@ -39,10 +39,20 @@ class HomePage extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/profile_defenshe.jpg'),
           ),
         ),
-        title: Text(
-          "Hi, ${user?.displayName ?? 'User'}",
-          style: GoogleFonts.arimo(
-              fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
+        title: FutureBuilder(
+          future: FirebaseAuth.instance.currentUser?.reload(),
+          builder: (context, snapshot) {
+      final user = FirebaseAuth.instance.currentUser;
+      String displayName = user?.displayName ?? 'User';
+      return Text(
+        "Hi, $displayName",
+        style: GoogleFonts.arimo(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      );
+    },
         ),
         actions: [
           IconButton(
