@@ -63,7 +63,7 @@ class _ContactPageState extends State<ContactPage> {
             color: Colors.black,
           ),
         ),
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Color(0xFFF06292),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
@@ -108,7 +108,7 @@ class _ContactPageState extends State<ContactPage> {
         onPressed: () {
           // TODO: Add functionality to add or update contacts
         },
-        backgroundColor: Colors.deepPurple.shade300,
+        backgroundColor: Colors.pink[300],
         icon: const Icon(Icons.add, color: Colors.black),
         label: Text(
           "Add contact",
@@ -125,8 +125,8 @@ class _ContactPageState extends State<ContactPage> {
   Widget helplineTile(String title, String number, IconData icon) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: Colors.purple[100],
-        child: Icon(icon, color: Colors.purple[800]),
+        backgroundColor: Colors.pink[50],
+        child: Icon(icon, color: Colors.pink[300]),
       ),
       title: Text(
         title,

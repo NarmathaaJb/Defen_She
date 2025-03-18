@@ -10,7 +10,7 @@ class SelfDefence extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Self Defence"),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Colors.pink[300],
         foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -67,8 +67,8 @@ class SelfDefence extends StatelessWidget {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () => _launchURL("https://www.udemy.com/course/self-defense-training/"),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade400),
-              child: const Text("View Online Self-Defense Course"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink[200]),
+              child: const Text("View Online Self-Defense Course",style: TextStyle(color: Colors.black),),
             ),
             const SizedBox(height: 20),
 
@@ -145,7 +145,7 @@ class SelfDefenceTechnique extends StatelessWidget {
               children: [
                 Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
-                Text(description, style: const TextStyle(color: Colors.grey)),
+                Text(description, style: const TextStyle(color: Color.fromARGB(255, 87, 83, 83))),
               ],
             ),
           ),

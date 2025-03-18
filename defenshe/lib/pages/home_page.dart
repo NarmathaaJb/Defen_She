@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Color(0xFFF06292),
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -91,11 +91,11 @@ class HomePage extends StatelessWidget {
                     width: 230,
                     height: 230,
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Color(0xFFD81B60),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withOpacity(0.5),
+                          color: Color(0xFFD81B60).withOpacity(0.5),
                           blurRadius: 15,
                           spreadRadius: 5,
                         ),
@@ -156,7 +156,7 @@ class HomePage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple[100],
+                    backgroundColor: Color(0xFFF06292),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(
                       horizontal: 30,
@@ -194,7 +194,7 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => CommunityPage()),
               );
               break;
-            case 3: // Logout
+            case 4: // Logout
               FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
@@ -267,7 +267,7 @@ class LiveSafeSection extends StatelessWidget {
                       child: Icon(
                         option["icon"],
                         size: 30,
-                        color: Colors.purple, // Customize color if needed
+                        color: Color(0xFFF06292), // Customize color if needed
                       ),
                     ),
                   ),
@@ -296,12 +296,14 @@ class OptionTile extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
+
   const OptionTile({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.onTap,
+    
   });
 
   @override
@@ -312,7 +314,7 @@ class OptionTile extends StatelessWidget {
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: ListTile(
-          leading: Icon(icon, color: Colors.purple, size: 30),
+          leading: Icon(icon, color: Color(0xFFF06292), size: 30),
           title: Text(title,
               style: GoogleFonts.poppins(
                   fontSize: 16, fontWeight: FontWeight.bold)),

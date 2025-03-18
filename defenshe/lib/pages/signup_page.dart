@@ -14,6 +14,7 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   bool _isPasswordVisible = false;
+  int _currentStep = 0;
 
   final TextEditingController _name = TextEditingController();
   final TextEditingController _email = TextEditingController();
@@ -22,7 +23,6 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _address = TextEditingController();
   final TextEditingController _city = TextEditingController();
 
-  // Emergency contact fields
   final TextEditingController _emergencyName1 = TextEditingController();
   final TextEditingController _emergencyNumber1 = TextEditingController();
   final TextEditingController _emergencyName2 = TextEditingController();
@@ -30,7 +30,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emergencyName3 = TextEditingController();
   final TextEditingController _emergencyNumber3 = TextEditingController();
 
-  String _gender = 'Male';
+  String _gender = 'Female';
 
   @override
   void dispose() {
@@ -130,42 +130,20 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text("Sign Up")),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFAD1457), Color(0xFFF48FB1)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTextField(_name, "Name"),
-                _buildTextField(_email, "Email", TextInputType.emailAddress),
-                _buildTextField(
-                    _password, "Password", TextInputType.visiblePassword, true),
-                _buildDropdownField(),
-                _buildTextField(_dob, "Date of Birth (DD/MM/YYYY)", TextInputType.datetime),
-                _buildTextField(_address, "Address"),
-                _buildTextField(_city, "City"),
-                const SizedBox(height: 10),
-                const Text("Emergency Contacts (Optional)",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                _buildTextField(_emergencyName1, "Emergency Contact 1 Name"),
-                _buildTextField(_emergencyNumber1, "Emergency Contact 1 Number",
-                    TextInputType.phone),
-                _buildTextField(_emergencyName2, "Emergency Contact 2 Name"),
-                _buildTextField(_emergencyNumber2, "Emergency Contact 2 Number",
-                    TextInputType.phone),
-                _buildTextField(_emergencyName3, "Emergency Contact 3 Name"),
-                _buildTextField(_emergencyNumber3, "Emergency Contact 3 Number",
-                    TextInputType.phone),
-                const SizedBox(height: 20),
-                _buildSignupButton(),
-                TextButton(
-                  onPressed: widget.onPressed,
-                  child: const Text("Already have an account? Login"),
-                ),
-              ],
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: _currentStep == 0 ? _buildFirstStep() : _buildSecondStep(),
             ),
           ),
         ),
@@ -173,37 +151,127 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String labelText,
+  Widget _buildFirstStep() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          'assets/images/logo.png',
+          height: 180,
+          color: Colors.white,
+        ),
+        const SizedBox(height: 20),
+        _buildTextField(_name, "Name"),
+        _buildTextField(_email, "Email", TextInputType.emailAddress),
+        _buildTextField(_password, "Password", TextInputType.visiblePassword, true),
+        _buildDropdownField(),
+        _buildTextField(_dob, "Date of Birth (DD/MM/YYYY)", TextInputType.datetime),
+        _buildTextField(_address, "Address"),
+        _buildTextField(_city, "City"),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              setState(() {
+                _currentStep = 1;
+              });
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.pinkAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          child: const Text("Next"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSecondStep() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Emergency Contacts (Optional)",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        _buildTextField(_emergencyName1, "Emergency Contact 1 Name"),
+        _buildTextField(_emergencyNumber1, "Emergency Contact 1 Number", TextInputType.phone),
+        _buildTextField(_emergencyName2, "Emergency Contact 2 Name"),
+        _buildTextField(_emergencyNumber2, "Emergency Contact 2 Number", TextInputType.phone),
+        _buildTextField(_emergencyName3, "Emergency Contact 3 Name"),
+        _buildTextField(_emergencyNumber3, "Emergency Contact 3 Number", TextInputType.phone),
+        const SizedBox(height: 20),
+        _buildSignupButton(),
+        OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.white),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          onPressed: () {
+            setState(() {
+              _currentStep = 0;
+            });
+          },
+          child: const Text("Back"),
+        ),
+        OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.white),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          onPressed: widget.onPressed,
+          child: const Text("Already have an account? Login"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText,
       [TextInputType keyboardType = TextInputType.text, bool isPassword = false]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
         controller: controller,
         validator: (value) {
-          if (labelText.contains("Emergency") && value!.isEmpty) {
-            return null; // emergency contacts are optional
+          if (hintText.contains("Emergency") && value!.isEmpty) {
+            return null;
           }
           if (value == null || value.isEmpty) {
-            return 'Enter your $labelText';
+            return 'Enter your $hintText';
           }
-          if (labelText == "Email" &&
+          if (hintText == "Email" &&
               !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-            return 'Enter a valid email address';
+            return 'Enter a valid email';
           }
-          if (labelText == "Date of Birth (DD/MM/YYYY)" &&
+          if (hintText == "Date of Birth (DD/MM/YYYY)" &&
               !RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(value)) {
             return 'Enter date in DD/MM/YYYY format';
           }
           return null;
         },
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          labelText: labelText,
-          border: const OutlineInputBorder(),
+          prefixIcon: const Icon(Icons.edit, color: Colors.white70),
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Colors.white60),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.2),
           suffixIcon: isPassword
               ? IconButton(
-                  icon: Icon(_isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off),
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.white70,
+                  ),
                   onPressed: () {
                     setState(() {
                       _isPasswordVisible = !_isPasswordVisible;
@@ -211,6 +279,14 @@ class _SignupPageState extends State<SignupPage> {
                   },
                 )
               : null,
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.white70),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
         obscureText: isPassword && !_isPasswordVisible,
         keyboardType: keyboardType,
@@ -220,9 +296,10 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _buildDropdownField() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: DropdownButtonFormField<String>(
         value: _gender,
+        dropdownColor: Colors.pink[200],
         onChanged: (value) {
           setState(() {
             _gender = value!;
@@ -231,26 +308,42 @@ class _SignupPageState extends State<SignupPage> {
         items: ['Male', 'Female', 'Other'].map((gender) {
           return DropdownMenuItem(value: gender, child: Text(gender));
         }).toList(),
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.2),
           labelText: "Gender",
-          border: OutlineInputBorder(),
+          labelStyle: const TextStyle(color: Colors.white60),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.white70),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
 
   Widget _buildSignupButton() {
-    return ElevatedButton(
-      onPressed: isLoading ? null : createUserWithEmailAndPassword,
-      style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(15)),
-      child: isLoading
-          ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                  color: Colors.white, strokeWidth: 2),
-            )
-          : const Text("Sign Up", style: TextStyle(fontSize: 18)),
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: isLoading ? null : createUserWithEmailAndPassword,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.pinkAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: isLoading
+            ? const CircularProgressIndicator(color: Colors.pinkAccent)
+            : const Text("Sign Up"),
+      ),
     );
   }
 }

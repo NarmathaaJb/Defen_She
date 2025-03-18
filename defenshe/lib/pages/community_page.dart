@@ -15,7 +15,7 @@ class CommunityPage extends StatelessWidget {
         title: const Text("Community", style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Colors.pink[300],
         foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -133,7 +133,7 @@ class CommunityCard extends StatelessWidget {
               children: [
                 Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
-                Text(description, style: const TextStyle(color: Colors.grey)),
+                Text(description, style: const TextStyle(color: Color.fromARGB(255, 87, 83, 83))),
                 const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
@@ -141,7 +141,7 @@ class CommunityCard extends StatelessWidget {
                     onPressed: onTap,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.purple.shade400,
+                      backgroundColor: Colors.pink[300],
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                     child: Text(buttonText),
