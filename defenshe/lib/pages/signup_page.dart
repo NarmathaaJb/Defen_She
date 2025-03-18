@@ -21,6 +21,15 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _dob = TextEditingController();
   final TextEditingController _address = TextEditingController();
   final TextEditingController _city = TextEditingController();
+
+  // Emergency contact fields
+  final TextEditingController _emergencyName1 = TextEditingController();
+  final TextEditingController _emergencyNumber1 = TextEditingController();
+  final TextEditingController _emergencyName2 = TextEditingController();
+  final TextEditingController _emergencyNumber2 = TextEditingController();
+  final TextEditingController _emergencyName3 = TextEditingController();
+  final TextEditingController _emergencyNumber3 = TextEditingController();
+
   String _gender = 'Male';
 
   @override
@@ -31,28 +40,51 @@ class _SignupPageState extends State<SignupPage> {
     _dob.dispose();
     _address.dispose();
     _city.dispose();
+    _emergencyName1.dispose();
+    _emergencyNumber1.dispose();
+    _emergencyName2.dispose();
+    _emergencyNumber2.dispose();
+    _emergencyName3.dispose();
+    _emergencyNumber3.dispose();
     super.dispose();
   }
 
   Future<void> createUserWithEmailAndPassword() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
+    setState(() {
+      isLoading = true;
+    });
 
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: _email.text.trim(),
         password: _password.text,
       );
 
       await userCredential.user!.updateDisplayName(_name.text.trim());
       await userCredential.user!.reload();
-      User updatedUser = FirebaseAuth.instance.currentUser!;
+
+      List<Map<String, dynamic>> emergencyContacts = [];
+      if (_emergencyName1.text.isNotEmpty && _emergencyNumber1.text.isNotEmpty) {
+        emergencyContacts.add({
+          'name': _emergencyName1.text.trim(),
+          'number': _emergencyNumber1.text.trim(),
+        });
+      }
+      if (_emergencyName2.text.isNotEmpty && _emergencyNumber2.text.isNotEmpty) {
+        emergencyContacts.add({
+          'name': _emergencyName2.text.trim(),
+          'number': _emergencyNumber2.text.trim(),
+        });
+      }
+      if (_emergencyName3.text.isNotEmpty && _emergencyNumber3.text.isNotEmpty) {
+        emergencyContacts.add({
+          'name': _emergencyName3.text.trim(),
+          'number': _emergencyNumber3.text.trim(),
+        });
+      }
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -64,6 +96,7 @@ class _SignupPageState extends State<SignupPage> {
         'dob': _dob.text.trim(),
         'address': _address.text.trim(),
         'city': _city.text.trim(),
+        'emergencyContacts': emergencyContacts,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -71,7 +104,7 @@ class _SignupPageState extends State<SignupPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Signup Successful!")),
         );
-        Navigator.pop(context); // Go back to Login after successful signup
+        Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
       String errorMessage = "Signup failed!";
@@ -108,13 +141,24 @@ class _SignupPageState extends State<SignupPage> {
               children: [
                 _buildTextField(_name, "Name"),
                 _buildTextField(_email, "Email", TextInputType.emailAddress),
-                _buildTextField(_password, "Password",
-                    TextInputType.visiblePassword, true),
+                _buildTextField(
+                    _password, "Password", TextInputType.visiblePassword, true),
                 _buildDropdownField(),
-                _buildTextField(_dob, "Date of Birth (DD/MM/YYYY)",
-                    TextInputType.datetime),
+                _buildTextField(_dob, "Date of Birth (DD/MM/YYYY)", TextInputType.datetime),
                 _buildTextField(_address, "Address"),
                 _buildTextField(_city, "City"),
+                const SizedBox(height: 10),
+                const Text("Emergency Contacts (Optional)",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                _buildTextField(_emergencyName1, "Emergency Contact 1 Name"),
+                _buildTextField(_emergencyNumber1, "Emergency Contact 1 Number",
+                    TextInputType.phone),
+                _buildTextField(_emergencyName2, "Emergency Contact 2 Name"),
+                _buildTextField(_emergencyNumber2, "Emergency Contact 2 Number",
+                    TextInputType.phone),
+                _buildTextField(_emergencyName3, "Emergency Contact 3 Name"),
+                _buildTextField(_emergencyNumber3, "Emergency Contact 3 Number",
+                    TextInputType.phone),
                 const SizedBox(height: 20),
                 _buildSignupButton(),
                 TextButton(
@@ -135,7 +179,23 @@ class _SignupPageState extends State<SignupPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
-        validator: (value) => value!.isEmpty ? 'Enter your $labelText' : null,
+        validator: (value) {
+          if (labelText.contains("Emergency") && value!.isEmpty) {
+            return null; // emergency contacts are optional
+          }
+          if (value == null || value.isEmpty) {
+            return 'Enter your $labelText';
+          }
+          if (labelText == "Email" &&
+              !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+            return 'Enter a valid email address';
+          }
+          if (labelText == "Date of Birth (DD/MM/YYYY)" &&
+              !RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(value)) {
+            return 'Enter date in DD/MM/YYYY format';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           labelText: labelText,
           border: const OutlineInputBorder(),
@@ -187,7 +247,8 @@ class _SignupPageState extends State<SignupPage> {
           ? const SizedBox(
               width: 24,
               height: 24,
-              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+              child: CircularProgressIndicator(
+                  color: Colors.white, strokeWidth: 2),
             )
           : const Text("Sign Up", style: TextStyle(fontSize: 18)),
     );
