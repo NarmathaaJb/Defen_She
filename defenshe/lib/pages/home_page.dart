@@ -207,6 +207,7 @@ class HomePage extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.call), label: "Contacts"),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: "Community"),
+          BottomNavigationBarItem(icon: Icon(Icons.feed), label: "Feed"),
           BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout"),
         ],
       ),
