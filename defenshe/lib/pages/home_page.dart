@@ -8,6 +8,11 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 
 class HomePage extends StatelessWidget {
@@ -24,6 +29,56 @@ class HomePage extends StatelessWidget {
       Fluttertoast.showToast(msg: 'Something went wrong! Call Emergency numbers');
     }
   }
+
+
+  Future<Position> _getCurrentLocation() async {
+  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    await Geolocator.openLocationSettings();
+    return Future.error('Location services are disabled.');
+  }
+
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error('Location permissions are permanently denied.');
+  }
+
+  return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+  }
+
+
+  /*Future<void> sendSOS(String phoneNumber, String message) async
+  {
+  // api
+
+  final uri = Uri.parse('https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
+  final response = await http.post(
+    uri,
+    headers: {
+      'Authorization':
+          'Basic ${base64Encode(utf8.encode('$accountSid:$authToken'))}',
+    },
+    body: {
+      'From': fromNumber,
+      'To': phoneNumber,
+      'Body': message,
+    },
+  );
+
+  if (response.statusCode == 201) {
+    debugPrint("SMS sent to $phoneNumber");
+  } else {
+    debugPrint("Failed to send SMS: ${response.body}");
+  }
+}*/
 
 
 
@@ -84,8 +139,44 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               GestureDetector(
-                onTap: () {
-                  debugPrint("SOS Button Pressed!");
+                onTap: () async {
+                  try {
+                    debugPrint("SOS Button Pressed!");
+                    Fluttertoast.showToast(msg: "Fetching location and sending alerts...");
+
+                    // 1. Get user location
+                    final position = await _getCurrentLocation();
+                    final latitude = position.latitude;
+                    final longitude = position.longitude;
+                    final locationUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+
+                    // 2. Prepare message
+                    final message = "🚨 EMERGENCY ALERT 🚨\nI need help! My location: $locationUrl";
+
+                    // 3. Get emergency contacts from Firestore
+                    final userId = FirebaseAuth.instance.currentUser?.uid;
+                    final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+                    final contacts = userDoc['emergencyContacts'] as List<dynamic>;
+
+                    // 4. Send SMS to each emergency contact
+                    for (var number in contacts) {
+                      String formattedNumber = number.toString().replaceAll(RegExp(r'\D'), ''); // remove non-digits
+                      if (formattedNumber.startsWith('0')) {
+                        formattedNumber = formattedNumber.substring(1); // remove leading zero
+                      }
+                      if (!formattedNumber.startsWith('91')) {
+                        formattedNumber = '91$formattedNumber';
+                      }
+                      formattedNumber = '+$formattedNumber'; // add '+'
+  
+                      await sendSOS(formattedNumber, message);
+                    }
+
+                    Fluttertoast.showToast(msg: "SOS Alert sent successfully.");
+                  }
+                  catch (e) {
+                    Fluttertoast.showToast(msg: "Error sending SOS: $e");
+                  }
                 },
                 child: Center(
                   child: Container(
