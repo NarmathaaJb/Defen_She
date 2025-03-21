@@ -8,7 +8,7 @@ class SelfDefence extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Self Defence"),
+        title: const Text("Self Defence", style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
         backgroundColor: Colors.pink[300],
         foregroundColor: Colors.black,

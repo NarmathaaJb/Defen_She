@@ -26,99 +26,156 @@ class _ContactPageState extends State<ContactPage> {
   }
 
   Future<void> fetchEmergencyContacts() async {
-  try {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        if (doc.exists && doc.data()?['emergencyContacts'] != null) {
+          setState(() {
+            emergencyContacts = List<Map<String, dynamic>>.from(
+              (doc.data()?['emergencyContacts'] as List).map((e) => Map<String, dynamic>.from(e))
+            );
+          });
+        } else {
+          setState(() {
+            emergencyContacts = [];
+          });
+        }
+      }
+    } catch (e) {
+      print("Error fetching contacts: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> addEmergencyContact(String name, String number) async {
+    if (emergencyContacts.length >= 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("You can only add up to 3 emergency contacts.")),
+      );
+      return;
+    }
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid != null) {
-      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      if (doc.exists && doc.data()?['emergencyContacts'] != null) {
-        setState(() {
-          emergencyContacts = List<Map<String, dynamic>>.from(doc.data()!['emergencyContacts']);
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          emergencyContacts = [];
-          isLoading = false;
-        });
-      }
+      emergencyContacts.add({'name': name, 'number': number});
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'emergencyContacts': emergencyContacts,
+      });
+      fetchEmergencyContacts();
     }
-  } catch (e) {
-    setState(() {
-      emergencyContacts = [];
-      isLoading = false;
-    });
   }
-}
 
+  Future<void> deleteEmergencyContact(int index) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      emergencyContacts.removeAt(index);
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'emergencyContacts': emergencyContacts,
+      });
+      fetchEmergencyContacts();
+    }
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Contacts",
-          style: GoogleFonts.arimo(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: Color(0xFFF06292),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Helpline",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        helplineTile("Women Helpline", "1090", Icons.woman_2_outlined),
-                        helplineTile("Police", "100", Icons.local_police),
-                        helplineTile("Domestic Abuse", "1091", Icons.security),
-                        helplineTile("Emergency", "112", Icons.warning),
-                        helplineTile("Ambulance", "108", Icons.accessible),
-                        const SizedBox(height: 20),
-                        Text("Emergency Contacts",
-                            style: GoogleFonts.montserrat(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 10),
-                        emergencyContacts.isEmpty
-                            ? const Text("No emergency contacts added.")
-                            : Column(
-                                children: emergencyContacts.map((contact) {
-                                  return dynamicEmergencyContactTile(contact['name'], contact['number']);
-                                }).toList(),
-                              ),
-                      ],
-                    ),
-                  ),
-                ],
+  void showAddContactDialog() {
+    String name = "";
+    String number = "";
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Add Emergency Contact"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: "Name"),
+                onChanged: (value) => name = value,
               ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Add functionality to add or update contacts
-        },
-        backgroundColor: Colors.pink[300],
-        icon: const Icon(Icons.add, color: Colors.black),
-        label: Text(
-          "Add contact",
-          style: GoogleFonts.montserrat(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
+              TextField(
+                decoration: InputDecoration(labelText: "Phone Number"),
+                keyboardType: TextInputType.phone,
+                onChanged: (value) => number = value,
+              ),
+            ],
           ),
-        ),
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (name.isNotEmpty && number.isNotEmpty) {
+                  addEmergencyContact(name, number);
+                  Navigator.pop(context);
+                }
+              },
+              child: Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showEditContactDialog(int index, String existingName, String existingNumber) {
+    final nameController = TextEditingController(text: existingName);
+    final numberController = TextEditingController(text: existingNumber);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Edit Contact"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: "Name"),
+                controller: nameController,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: "Phone Number"),
+                controller: numberController,
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                final updatedName = nameController.text;
+                final updatedNumber = numberController.text;
+
+                if (updatedName.isNotEmpty && updatedNumber.isNotEmpty) {
+                  emergencyContacts[index] = {
+                    'name': updatedName,
+                    'number': updatedNumber,
+                  };
+
+                  final uid = FirebaseAuth.instance.currentUser?.uid;
+                  if (uid != null) {
+                    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+                      'emergencyContacts': emergencyContacts,
+                    });
+                  }
+
+                  Navigator.pop(context);
+                  fetchEmergencyContacts();
+                }
+              },
+              child: Text("Update"),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -143,23 +200,82 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
-  // Dynamic Emergency Contact tile from fetched Firestore data
-  Widget dynamicEmergencyContactTile(String name, String number) {
-  return ListTile(
-    leading: const CircleAvatar(
-      backgroundImage: AssetImage('assets/images/emergency_avatar.png'),
-    ),
-    title: Text(
-      name,
-      style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500),
-    ),
-    subtitle: Text(
-      number,
-      style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
-    ),
-    trailing: const Icon(Icons.call, color: Colors.black),
-    onTap: () {
-      _callNumber(number);
-    },
-  );
-}}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Contacts", style: GoogleFonts.arimo(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
+        backgroundColor: Color(0xFFF06292),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Helplines", style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    helplineTile("Women Helpline", "1090", Icons.woman_2_outlined),
+                    helplineTile("Police", "100", Icons.local_police),
+                    helplineTile("Domestic Abuse", "1091", Icons.security),
+                    helplineTile("Emergency", "112", Icons.warning),
+                    helplineTile("Ambulance", "108", Icons.accessible),
+                    const SizedBox(height: 25),
+                    Text("Emergency Contacts", style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    emergencyContacts.isEmpty
+                        ? const Text("No emergency contacts added.")
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: emergencyContacts.length,
+                            itemBuilder: (context, index) {
+                              final contact = emergencyContacts[index];
+                              return ListTile(
+                                leading: CircleAvatar(child: Icon(Icons.person)),
+                                title: Text(contact['name'], style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500)),
+                                subtitle: Text(contact['number'], style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.call, color: Colors.green),
+                                      onPressed: () {
+                                        _callNumber(contact['number']);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () {
+                                        showEditContactDialog(index, contact['name'], contact['number']);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => deleteEmergencyContact(index),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                  ],
+                ),
+              ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: showAddContactDialog,
+        backgroundColor: Colors.pink[300],
+        icon: const Icon(Icons.add, color: Colors.black),
+        label: Text(
+          "Add contact",
+          style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+        ),
+      ),
+    );
+  }
+}

@@ -1,104 +1,128 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+class SafetyTip {
+  final String title;
+  final String shortDesc;
+  final String detailDesc;
+  final String imageAsset;
+
+  SafetyTip({
+    required this.title,
+    required this.shortDesc,
+    required this.detailDesc,
+    required this.imageAsset,
+  });
+}
 
 class SafetyTips extends StatelessWidget {
   const SafetyTips({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Safety Tips"),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple.shade400,
-        foregroundColor: Colors.black,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Safety Tips", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+          centerTitle: true,
+          backgroundColor: Colors.pink[400],
+          bottom: const TabBar(
+            isScrollable: true,
+            labelStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            tabs: [
+              Tab(text: "Kids"),
+              Tab(text: "Teens"),
+              Tab(text: "Women"),
+              Tab(text: "Elderly"),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            // Personal Safety Tips
-            const SectionTitle(title: "🔒 Personal Safety Tips"),
-            const SafetyTip(
-              "🔹 Trust your instincts – if something feels wrong, leave immediately.",
-            ),
-            const SafetyTip(
-              "🔹 Avoid isolated places, especially at night.",
-            ),
-            const SafetyTip(
-              "🔹 Keep emergency contacts on speed dial.",
-            ),
+            TipSection(ageGroup: "Kids", tips: kidsTips),
+            TipSection(ageGroup: "Teens", tips: teensTips),
+            TipSection(ageGroup: "Women", tips: womenTips),
+            TipSection(ageGroup: "Elderly", tips: elderlyTips),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-            // Online Safety Tips
-            const SectionTitle(title: "💻 Online Safety"),
-            const SafetyTip(
-              "🔹 Never share personal details with strangers online.",
-            ),
-            const SafetyTip(
-              "🔹 Use strong passwords and enable two-factor authentication.",
-            ),
-            const SafetyTip(
-              "🔹 Avoid clicking unknown links in messages or emails.",
-            ),
+class TipSection extends StatelessWidget {
+  final String ageGroup;
+  final List<SafetyTip> tips;
 
-            // Travel Safety Tips
-            const SectionTitle(title: "✈️ Travel Safety"),
-            const SafetyTip(
-              "🔹 Always share your travel plans with family or friends.",
-            ),
-            const SafetyTip(
-              "🔹 Use verified taxi or ride-sharing services.",
-            ),
-            const SafetyTip(
-              "🔹 Carry a personal safety alarm or pepper spray.",
-            ),
+  const TipSection({super.key, required this.ageGroup, required this.tips});
 
-            // Workplace Safety
-            const SectionTitle(title: "🏢 Workplace Safety"),
-            const SafetyTip(
-              "🔹 Know your workplace’s emergency exits and procedures.",
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(12),
+      itemCount: tips.length,
+      itemBuilder: (context, index) {
+        final tip = tips[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 5,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.pink.shade100,
+              child: const Icon(Icons.shield, color: Colors.pink),
             ),
-            const SafetyTip(
-              "🔹 Avoid staying late alone in the office.",
-            ),
-            const SafetyTip(
-              "🔹 Report any harassment or unsafe behavior immediately.",
-            ),
+            title: Text(tip.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text(tip.shortDesc),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => TipDetailDialog(tip: tip),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
 
-            // Emergency Numbers
-            const SectionTitle(title: "📞 Emergency Contacts"),
-            ContactCard(
-              title: "Police Helpline",
-              number: "100",
-              onTap: () async {
-                  bool? res = await FlutterPhoneDirectCaller.callNumber("100");
-                  if (res == null || !res) {
-                    Fluttertoast.showToast(msg: "Cannot place call. Try manually.");
-                  }
-                },
+class TipDetailDialog extends StatelessWidget {
+  final SafetyTip tip;
+
+  const TipDetailDialog({super.key, required this.tip});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              child: Image.asset(tip.imageAsset, fit: BoxFit.cover),
             ),
-            ContactCard(
-              title: "Women’s Helpline",
-              number: "1091",
-              onTap: () async {
-                  bool? res = await FlutterPhoneDirectCaller.callNumber("1091");
-                  if (res == null || !res) {
-                    Fluttertoast.showToast(msg: "Cannot place call. Try manually.");
-                  }
-                },
-            ),
-            ContactCard(
-              title: "Cyber Crime Helpline",
-              number: "1930",
-              onTap: () async {
-                  bool? res = await FlutterPhoneDirectCaller.callNumber("1930");
-                  if (res == null || !res) {
-                    Fluttertoast.showToast(msg: "Cannot place call. Try manually.");
-                  }
-                },
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(tip.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  Text(tip.detailDesc, style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("Close"),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -107,67 +131,43 @@ class SafetyTips extends StatelessWidget {
   }
 }
 
-// Reusable Section Title Widget
-class SectionTitle extends StatelessWidget {
-  final String title;
-  const SectionTitle({super.key, required this.title});
+// Example tips (Add real descriptions and your asset images in pubspec.yaml)
+final List<SafetyTip> kidsTips = [
+  SafetyTip(
+    title: "Good Touch, Bad Touch",
+    shortDesc: "Help children understand body safety.",
+    detailDesc: "Teach children about safe and unsafe touches with clear examples and encourage open communication.",
+    imageAsset: "assets/images/good_bad_touch.jpg",
+  ),
+  // Add more kids tips
+];
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 8),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
+final List<SafetyTip> teensTips = [
+  SafetyTip(
+    title: "Understanding Body Changes",
+    shortDesc: "Educate teens on physical and emotional changes.",
+    detailDesc: "Talk openly about periods, hormonal changes, and emotional well-being.",
+    imageAsset: "assets/images/teens_changes.png",
+  ),
+  // Add more teen tips
+];
 
-// Reusable Safety Tip Widget
-class SafetyTip extends StatelessWidget {
-  final String tip;
-  const SafetyTip(this.tip, {super.key});
+final List<SafetyTip> womenTips = [
+  SafetyTip(
+    title: "Be Alert When Outside",
+    shortDesc: "Always stay aware of surroundings.",
+    detailDesc: "Stay alert when out and about. Avoid distractions and trust your instincts.",
+    imageAsset: "assets/images/women_safety.png",
+  ),
+  // Add more women tips from your infographic
+];
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        tip,
-        style: const TextStyle(fontSize: 16),
-      ),
-    );
-  }
-}
-
-// Contact Card for Emergency Numbers
-class ContactCard extends StatelessWidget {
-  final String title;
-  final String number;
-  final VoidCallback onTap;
-  const ContactCard({super.key, required this.title, required this.number, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        //leading: const Icon(Icons.phone, color: Colors.pink),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text("Call: $number"),
-        trailing: IconButton(
-          icon: const Icon(Icons.call, color: Colors.green),
-          onPressed: () async {
-            Uri uri = Uri.parse("tel:$number");
-            if (!await launchUrl(uri)) {
-              throw Exception("Could not launch call to $number");
-            }
-          },
-        ),
-      ),
-    );
-  }
-}
+final List<SafetyTip> elderlyTips = [
+  SafetyTip(
+    title: "Stay Connected",
+    shortDesc: "Maintain communication with family.",
+    detailDesc: "Regular check-ins and being cautious with strangers is key for elderly safety.",
+    imageAsset: "assets/images/elderly_safety.png",
+  ),
+  // Add more elderly tips
+];

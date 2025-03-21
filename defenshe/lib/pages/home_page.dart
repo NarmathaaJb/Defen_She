@@ -1,17 +1,19 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:defenshe/pages/auth_page.dart';
 import 'package:defenshe/pages/community_page.dart';
 import 'package:defenshe/pages/contact_page.dart';
 import 'package:defenshe/pages/safetyBot.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -57,6 +59,7 @@ class HomePage extends StatelessWidget {
 
   /*Future<void> sendSOS(String phoneNumber, String message) async
   {
+  
 
   final uri = Uri.parse('https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
   final response = await http.post(
@@ -129,7 +132,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Stay Safe and Secure",
+                "stay_safe".tr(),
                 style: GoogleFonts.poppins(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -140,8 +143,8 @@ class HomePage extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   try {
-                    debugPrint("SOS Button Pressed!");
-                    Fluttertoast.showToast(msg: "Fetching location and sending alerts...");
+                    debugPrint("SOS Button Pressed!".tr());
+                    Fluttertoast.showToast(msg: "fetching_location".tr());
 
                     // 1. Get user location
                     final position = await _getCurrentLocation();
@@ -171,10 +174,10 @@ class HomePage extends StatelessWidget {
                       await sendSOS(formattedNumber, message);
                     }
 
-                    Fluttertoast.showToast(msg: "SOS Alert sent successfully.");
+                    Fluttertoast.showToast(msg: "sos_alert_sent".tr());
                   }
                   catch (e) {
-                    Fluttertoast.showToast(msg: "Error sending SOS: $e");
+                    Fluttertoast.showToast(msg: "error_sending_sos: $e".tr());
                   }
                 },
                 child: Center(
@@ -206,60 +209,73 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                "Press the SOS button",
+                "press_sos".tr(),
                 style: GoogleFonts.nunito(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                     color: Colors.grey[800]),
                 textAlign: TextAlign.center,
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Locale currentLocale = context.locale;
+                  if (currentLocale.languageCode == 'en') {
+                    context.setLocale(Locale('ta'));
+                  } else {
+                    context.setLocale(Locale('en'));
+                  }
+                },
+                child: Text("switch_language".tr()),
+              ),
+              const SizedBox(height: 20),
+
               const SizedBox(height: 30),
               OptionTile(
                 icon: Icons.location_on,
-                title: "Nearby police",
-                subtitle: "Find the nearest police station",
+                title: "nearby_police".tr(),
+                subtitle: "find_police".tr(),
                 onTap: () {
                   HomePage.openMap("police station near me");
                 },
               ),
               OptionTile(
                 icon: Icons.phone,
-                title: "Women helpline",
-                subtitle: "For women in distress",
+                title: "women_helpline".tr(),
+                subtitle: "distress".tr(),
                 onTap: () async {
                   bool? res = await FlutterPhoneDirectCaller.callNumber("1091");
                   if (res == null || !res) {
-                    Fluttertoast.showToast(msg: "Cannot place call. Try manually.");
+                    Fluttertoast.showToast(msg: "cannot_call".tr());
                   }
                 },
               ),
               const SizedBox(height: 40),
               LiveSafeSection(), // Added LiveSafe Section here
               const SizedBox(height: 20),
-              Positioned(
-                bottom: 30,
-                right: 20,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SafetyBot()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF06292),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 0
-                    ),
-                  ),
-                  child: Text(
-                    "SafetyBot",
-                    style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
-                  ),
-                ),
-              ),
+              Align(
+  alignment: Alignment.bottomRight,
+  child: Padding(
+    padding: const EdgeInsets.only(bottom: 30, right: 20),
+    child: ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SafetyBot()),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFFF06292),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      ),
+      child: Text(
+        "safetybot".tr(),
+        style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+      ),
+    ),
+  ),
+),
+
             ],
           ),
         ),
@@ -311,10 +327,10 @@ class HomePage extends StatelessWidget {
 // ===========================
 class LiveSafeSection extends StatelessWidget {
   final List<Map<String, dynamic>> liveSafeOptions = [
-    {"icon": Icons.local_police, "label": "Police Stations", "search": "police stations near me"},
-    {"icon": Icons.local_hospital, "label": "Hospitals", "search": "hospitals near me"},
-    {"icon": Icons.local_pharmacy, "label": "Pharmacy", "search": "pharmacy near me"},
-    {"icon": Icons.directions_bus, "label": "Bus Stops", "search": "bus stops near me"},
+    {"icon": Icons.local_police, "label": "police_stations".tr(), "search": "police stations near me"},
+    {"icon": Icons.local_hospital, "label": "hospitals".tr(), "search": "hospitals near me"},
+    {"icon": Icons.local_pharmacy, "label": "pharmacy".tr(), "search": "pharmacy near me"},
+    {"icon": Icons.directions_bus, "label": "bus_stops".tr(), "search": "bus stops near me"},
   ];
 
   @override
@@ -325,7 +341,7 @@ class LiveSafeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Explore LiveSafe",
+            "explore_livesafe".tr(),
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -333,47 +349,53 @@ class LiveSafeSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: liveSafeOptions.map((option) {
-              return Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      HomePage.openMap(option["search"]);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            blurRadius: 5,
-                            spreadRadius: 2,
+          SingleChildScrollView (
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: liveSafeOptions.map((option) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          HomePage.openMap(option["search"]);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                              ),
+                            ],
                           ),
-                        ],
+                          child: Icon(
+                            option["icon"],
+                            size: 30,
+                            color: Color(0xFFF06292), // Customize color if needed
+                          ),
+                        ),
                       ),
-                      child: Icon(
-                        option["icon"],
-                        size: 30,
-                        color: Color(0xFFF06292), // Customize color if needed
+                      const SizedBox(height: 8),
+                      Text(
+                        option["label"],
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    option["label"],
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
         ],
       ),

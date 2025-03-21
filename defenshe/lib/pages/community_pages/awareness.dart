@@ -10,7 +10,7 @@ class Awareness extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Awareness"),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Colors.pink[300],
         foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -113,7 +113,7 @@ class ResourceButton extends StatelessWidget {
             throw Exception("Could not launch $url");
           }
         },
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple.shade300),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.pink[200]),
         child: Text(title, style: const TextStyle(color: Colors.white)),
       ),
     );
