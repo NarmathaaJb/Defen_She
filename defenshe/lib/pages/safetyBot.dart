@@ -26,7 +26,7 @@ class _SafetyBotState extends State<SafetyBot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Colors.pink[300],
         title: Text(
           "SafetyBot",
           style: GoogleFonts.poppins(fontSize: 20, color:  Colors.black),
@@ -46,7 +46,7 @@ class _SafetyBotState extends State<SafetyBot> {
                     margin: EdgeInsets.symmetric(vertical: 5),
                     padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isUser ? Colors.purple[100] : Colors.grey[200],
+                      color: isUser ? Colors.pink[100] : Colors.grey[200],
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -74,7 +74,7 @@ class _SafetyBotState extends State<SafetyBot> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send, color: Colors.purple),
+                  icon: Icon(Icons.send, color: Colors.pink),
                   onPressed: sendMessage,
                 ),
               ],

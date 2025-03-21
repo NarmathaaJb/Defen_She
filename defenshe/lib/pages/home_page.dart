@@ -57,7 +57,6 @@ class HomePage extends StatelessWidget {
 
   /*Future<void> sendSOS(String phoneNumber, String message) async
   {
-  // api
 
   final uri = Uri.parse('https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
   final response = await http.post(
