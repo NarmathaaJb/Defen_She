@@ -54,7 +54,7 @@ class _ContactPageState extends State<ContactPage> {
   Future<void> addEmergencyContact(String name, String number) async {
     if (emergencyContacts.length >= 3) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("You can only add up to 3 emergency contacts.")),
+        const SnackBar(content: Text("You can only add up to 3 emergency contacts.")),
       );
       return;
     }
@@ -86,16 +86,16 @@ class _ContactPageState extends State<ContactPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Add Emergency Contact"),
+          title: const Text("Add Emergency Contact"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: "Name"),
+                decoration: const InputDecoration(labelText: "Name"),
                 onChanged: (value) => name = value,
               ),
               TextField(
-                decoration: InputDecoration(labelText: "Phone Number"),
+                decoration: const InputDecoration(labelText: "Phone Number"),
                 keyboardType: TextInputType.phone,
                 onChanged: (value) => number = value,
               ),
@@ -104,7 +104,7 @@ class _ContactPageState extends State<ContactPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
@@ -113,7 +113,7 @@ class _ContactPageState extends State<ContactPage> {
                   Navigator.pop(context);
                 }
               },
-              child: Text("Add"),
+              child: const Text("Add"),
             ),
           ],
         );
@@ -129,16 +129,16 @@ class _ContactPageState extends State<ContactPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Edit Contact"),
+          title: const Text("Edit Contact"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: "Name"),
+                decoration: const InputDecoration(labelText: "Name"),
                 controller: nameController,
               ),
               TextField(
-                decoration: InputDecoration(labelText: "Phone Number"),
+                decoration: const InputDecoration(labelText: "Phone Number"),
                 controller: numberController,
                 keyboardType: TextInputType.phone,
               ),
@@ -147,7 +147,7 @@ class _ContactPageState extends State<ContactPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () async {
@@ -171,7 +171,7 @@ class _ContactPageState extends State<ContactPage> {
                   fetchEmergencyContacts();
                 }
               },
-              child: Text("Update"),
+              child: const Text("Update"),
             ),
           ],
         );
@@ -205,7 +205,7 @@ class _ContactPageState extends State<ContactPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Contacts", style: GoogleFonts.arimo(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
-        backgroundColor: Color(0xFFF06292),
+        backgroundColor: const Color(0xFFF06292),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
@@ -231,32 +231,46 @@ class _ContactPageState extends State<ContactPage> {
                         ? const Text("No emergency contacts added.")
                         : ListView.builder(
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: emergencyContacts.length,
                             itemBuilder: (context, index) {
                               final contact = emergencyContacts[index];
                               return ListTile(
-                                leading: CircleAvatar(child: Icon(Icons.person)),
-                                title: Text(contact['name'], style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500)),
-                                subtitle: Text(contact['number'], style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+                                leading: const CircleAvatar(
+                                    backgroundColor: Color.fromARGB(255, 245, 224, 231),
+                                    child: Icon(Icons.person, color: Color(0xFFF06292))),
+                                title: Text(contact['name'],
+                                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500)),
+                                subtitle: Text(contact['number'],
+                                    style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.call, color: Colors.green),
+                                      icon: const Icon(Icons.call, color: Colors.black),
                                       onPressed: () {
                                         _callNumber(contact['number']);
                                       },
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.edit, color: Colors.blue),
-                                      onPressed: () {
-                                        showEditContactDialog(index, contact['name'], contact['number']);
+                                    PopupMenuButton<String>(
+                                      icon: const Icon(Icons.more_vert, color: Colors.black),
+                                      onSelected: (value) {
+                                        if (value == 'Edit') {
+                                          showEditContactDialog(index, contact['name'], contact['number']);
+                                        } else if (value == 'Delete') {
+                                          deleteEmergencyContact(index);
+                                        }
                                       },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => deleteEmergencyContact(index),
+                                      itemBuilder: (context) => [
+                                        const PopupMenuItem(
+                                          value: 'Edit',
+                                          child: Text('Edit'),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: 'Delete',
+                                          child: Text('Delete'),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),

@@ -13,29 +13,29 @@ class Awareness extends StatelessWidget {
         backgroundColor: Colors.pink[300],
         foregroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Understanding the Issue
-            const SectionTitle(title: "Understanding the Issue"),
-            const AwarenessText(
+            SectionTitle(title: "Understanding the Issue"),
+            AwarenessText(
               "Many people face challenges related to harassment, domestic violence, and personal safety. "
               "Understanding these issues helps individuals take preventive actions and support victims effectively.",
             ),
 
             // Statistics & Facts
-            const SectionTitle(title: "Statistics & Facts"),
-            const AwarenessText(
+            SectionTitle(title: "Statistics & Facts"),
+            AwarenessText(
               "🔹 1 in 3 women globally have experienced physical or sexual violence.\n"
               "🔹 70% of cyber harassment cases go unreported.\n"
               "🔹 Over 80% of victims of violence know their attacker.",
             ),
 
             // How to Report
-            const SectionTitle(title: "How to Report"),
-            const AwarenessText(
+            SectionTitle(title: "How to Report"),
+            AwarenessText(
               "1️⃣ Stay safe: If in danger, move to a secure place.\n"
               "2️⃣ Contact authorities: Dial emergency services or helplines.\n"
               "3️⃣ Gather evidence: Take screenshots, note details.\n"
@@ -43,13 +43,13 @@ class Awareness extends StatelessWidget {
             ),
 
             // Educational Resources
-            const SectionTitle(title: "Educational Resources"),
+            SectionTitle(title: "Educational Resources"),
             ResourceButton(title: "Read More on Women's Safety", url: "https://wbl.worldbank.org/en/safety"),
             ResourceButton(title: "Self Awareness Tips", url: "https://www.betterup.com/blog/what-is-self-awareness"),
             ResourceButton(title: "Legal Rights of women in India", url: "https://www.lexisnexis.in/blogs/laws-for-women-in-india/"),
 
             // Stories & Testimonials
-            const SectionTitle(title: "Stories & Testimonials"),
+            SectionTitle(title: "Stories & Testimonials"),
             StoryCard(
               title: "Escaping an Unsafe Relationship",
               content: "A survivor shares how she found support and regained confidence.",

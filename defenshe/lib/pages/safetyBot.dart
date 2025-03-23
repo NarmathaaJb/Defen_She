@@ -36,15 +36,15 @@ class _SafetyBotState extends State<SafetyBot> {
         children: [
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 bool isUser = messages[index]["sender"] == "user";
                 return Align(
                   alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
                       color: isUser ? Colors.pink[100] : Colors.grey[200],
                       borderRadius: BorderRadius.circular(12),
@@ -59,7 +59,7 @@ class _SafetyBotState extends State<SafetyBot> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             color: Colors.white,
             child: Row(
               children: [
@@ -69,12 +69,12 @@ class _SafetyBotState extends State<SafetyBot> {
                     decoration: InputDecoration(
                       hintText: "Type your message...",
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send, color: Colors.pink),
+                  icon: const Icon(Icons.send, color: Colors.pink),
                   onPressed: sendMessage,
                 ),
               ],

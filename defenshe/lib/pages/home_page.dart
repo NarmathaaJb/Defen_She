@@ -23,9 +23,9 @@ class HomePage extends StatelessWidget {
 
   static Future<void> openMap(String location) async{
     String googleUrl = 'https://www.google.com/maps/search/$location';
-    final Uri _url = Uri.parse(googleUrl);
+    final Uri url = Uri.parse(googleUrl);
     try{
-      await launchUrl(_url);
+      await launchUrl(url);
     }
     catch(e){
       Fluttertoast.showToast(msg: 'Something went wrong! Call Emergency numbers');
@@ -57,7 +57,7 @@ class HomePage extends StatelessWidget {
   }
 
 
-  /*Future<void> sendSOS(String phoneNumber, String message) async
+/*Future<void> sendSOS(String phoneNumber, String message) async
   {
   
 
@@ -89,10 +89,10 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFF06292),
+        backgroundColor: const Color(0xFFF06292),
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
           child: CircleAvatar(
             backgroundImage: AssetImage('assets/images/profile_defenshe.jpg'),
           ),
@@ -119,7 +119,7 @@ class HomePage extends StatelessWidget {
               await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => AuthPage()),
+                MaterialPageRoute(builder: (context) => const AuthPage()),
               );
             },
           ),
@@ -185,11 +185,11 @@ class HomePage extends StatelessWidget {
                     width: 230,
                     height: 230,
                     decoration: BoxDecoration(
-                      color: Color(0xFFD81B60),
+                      color: const Color(0xFFD81B60),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Color(0xFFD81B60).withOpacity(0.5),
+                          color: const Color(0xFFD81B60).withOpacity(0.5),
                           blurRadius: 15,
                           spreadRadius: 5,
                         ),
@@ -216,13 +216,14 @@ class HomePage extends StatelessWidget {
                     color: Colors.grey[800]),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Locale currentLocale = context.locale;
                   if (currentLocale.languageCode == 'en') {
-                    context.setLocale(Locale('ta'));
+                    context.setLocale(const Locale('ta'));
                   } else {
-                    context.setLocale(Locale('en'));
+                    context.setLocale(const Locale('en'));
                   }
                 },
                 child: Text("switch_language".tr()),
@@ -260,13 +261,13 @@ class HomePage extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SafetyBot()),
+          MaterialPageRoute(builder: (context) => const SafetyBot()),
         );
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFFF06292),
+        backgroundColor: const Color(0xFFF06292),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       ),
       child: Text(
         "safetybot".tr(),
@@ -292,20 +293,20 @@ class HomePage extends StatelessWidget {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ContactPage()),
+                MaterialPageRoute(builder: (context) => const ContactPage()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CommunityPage()),
+                MaterialPageRoute(builder: (context) => const CommunityPage()),
               );
               break;
             case 4: // Logout
               FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => AuthPage()),
+                MaterialPageRoute(builder: (context) => const AuthPage()),
               );
               break;
           }
@@ -332,6 +333,8 @@ class LiveSafeSection extends StatelessWidget {
     {"icon": Icons.local_pharmacy, "label": "pharmacy".tr(), "search": "pharmacy near me"},
     {"icon": Icons.directions_bus, "label": "bus_stops".tr(), "search": "bus stops near me"},
   ];
+
+  LiveSafeSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +381,7 @@ class LiveSafeSection extends StatelessWidget {
                           child: Icon(
                             option["icon"],
                             size: 30,
-                            color: Color(0xFFF06292), // Customize color if needed
+                            color: const Color(0xFFF06292), // Customize color if needed
                           ),
                         ),
                       ),
@@ -427,7 +430,7 @@ class OptionTile extends StatelessWidget {
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: ListTile(
-          leading: Icon(icon, color: Color(0xFFF06292), size: 30),
+          leading: Icon(icon, color: const Color(0xFFF06292), size: 30),
           title: Text(title,
               style: GoogleFonts.poppins(
                   fontSize: 16, fontWeight: FontWeight.bold)),

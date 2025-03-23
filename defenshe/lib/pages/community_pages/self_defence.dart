@@ -37,22 +37,22 @@ class SelfDefence extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            SelfDefenceTechnique(
+            const SelfDefenceTechnique(
               imagePath: "assets/images/palm_strike.jpg",
               title: "Palm Strike",
               description: "Use the base of your palm to strike the attacker's nose or chin.",
             ),
-            SelfDefenceTechnique(
+            const SelfDefenceTechnique(
               imagePath: "assets/images/knee_strike.jpg",
               title: "Knee Strike",
               description: "Bring your knee up forcefully to the attacker's stomach or groin.",
             ),
-            SelfDefenceTechnique(
+            const SelfDefenceTechnique(
               imagePath: "assets/images/elbow_strike.jpg",
               title: "Elbow Strike",
               description: "Use your elbow to hit the attacker’s face or ribs.",
             ),
-            SelfDefenceTechnique(
+            const SelfDefenceTechnique(
               imagePath: "assets/images/front_kick.jpg",
               title: "Front Kick",
               description: "A front kick to the groin can be a very effective self-defense tool because of the vulnerable area it targets",
@@ -94,9 +94,9 @@ class SelfDefence extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            FAQItem(question: "Is self-defense legal?", answer: "Yes, you are allowed to defend yourself if attacked."),
-            FAQItem(question: "What should I do if I am followed?", answer: "Go to a public place and call for help."),
-            FAQItem(question: "What if I freeze in a dangerous situation?", answer: "Practice self-defense drills regularly to build muscle memory."),
+            const FAQItem(question: "Is self-defense legal?", answer: "Yes, you are allowed to defend yourself if attacked."),
+            const FAQItem(question: "What should I do if I am followed?", answer: "Go to a public place and call for help."),
+            const FAQItem(question: "What if I freeze in a dangerous situation?", answer: "Practice self-defense drills regularly to build muscle memory."),
           ],
         ),
       ),

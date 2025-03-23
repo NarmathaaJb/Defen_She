@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text("Don't have an account ?",
+                  const Text("Don't have an account ?",
                   style: TextStyle(color: Colors.white),),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(

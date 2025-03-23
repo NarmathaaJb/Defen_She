@@ -1,6 +1,4 @@
-import 'package:defenshe/pages/auth_page.dart';
-import 'package:defenshe/pages/login_page.dart';
-import 'package:defenshe/pages/signup_page.dart';
+import 'package:defenshe/pages/splash_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,14 +13,14 @@ void main() async{
   );
   await EasyLocalization.ensureInitialized();
   await SharedPreferences.getInstance();
-  FirebaseAuth.instance.setLanguageCode('en'); 
-runApp( 
+  FirebaseAuth.instance.setLanguageCode('en');
+runApp(
   EasyLocalization(
-    supportedLocales: [Locale('en'), Locale('ta')],
+    supportedLocales: const [Locale('en'), Locale('ta')],
     path: 'assets/langs',
-    fallbackLocale: Locale('en'),
+    fallbackLocale: const Locale('en'),
     useOnlyLangCode: true,
-    child: MyApp(),
+    child: const MyApp(),
   ),
 );
 }
@@ -37,7 +35,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const AuthPage()
+      home:  SplashScreen()
       //const AuthPage(),
     );
   }
