@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,14 +15,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:url_launcher/url_launcher.dart';
 
 
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
-  final user = FirebaseAuth.instance.currentUser;
 
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
   static Future<void> openMap(String location) async{
     String googleUrl = 'https://www.google.com/maps/search/$location';
     final Uri url = Uri.parse(googleUrl);
@@ -32,6 +34,59 @@ class HomePage extends StatelessWidget {
     }
   }
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser;
+
+  late stt.SpeechToText _speech;
+
+  bool _isListening = false;
+  
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+    startVoiceListening();
+  }
+
+  Future<void> startVoiceListening() async {
+    bool available = await _speech.initialize(
+      onStatus: (status) {
+        if (status == "notListening" && _isListening) {
+          startVoiceListening();
+        }
+      },
+      onError: (error) {
+        startVoiceListening();
+      },
+    );
+
+    if (available) {
+      _isListening = true;
+      _speech.listen(
+        onResult: (result) {
+          final recognizedText = result.recognizedWords.toLowerCase();
+          if (recognizedText.contains("help") || recognizedText.contains("save me") || recognizedText.contains("sos")) {
+          triggerVoiceSOS();
+          }
+        },
+        listenMode: stt.ListenMode.confirmation,
+        partialResults: true,
+        localeId: 'en_US',
+        listenFor: const Duration(minutes: 5),
+        pauseFor: const Duration(seconds: 5),
+      );
+    }
+  }
+
+  Future<void> triggerVoiceSOS() async {
+    Fluttertoast.showToast(msg: "Voice trigger detected! Sending SOS...");
+    await _triggerSOS();
+  }
 
   Future<Position> _getCurrentLocation() async {
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -55,7 +110,6 @@ class HomePage extends StatelessWidget {
   return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
   }
-
 
 /*Future<void> sendSOS(String phoneNumber, String message) async
   {
@@ -82,7 +136,47 @@ class HomePage extends StatelessWidget {
   }
 }*/
 
+Future<void> _triggerSOS() async {
+    try {
+      Fluttertoast.showToast(msg: "Sending SOS...");
 
+      final position = await _getCurrentLocation();
+      final locationUrl =
+          'https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}';
+
+      final message = "🚨 EMERGENCY ALERT 🚨\nI need help! My location: $locationUrl";
+
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      final contacts = userDoc['emergencyContacts'] as List<dynamic>;
+
+      for (var number in contacts) {
+        String formattedNumber = number
+            .toString()
+            .replaceAll(RegExp(r'\D'), '')
+            .replaceFirst(RegExp(r'^0+'), '');
+        if (!formattedNumber.startsWith('91')) {
+          formattedNumber = '91$formattedNumber';
+        }
+        formattedNumber = '+$formattedNumber';
+
+        await sendSOS(formattedNumber, message);
+      }
+
+      Fluttertoast.showToast(msg: "SOS alert sent successfully.");
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error sending SOS: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    _speech.stop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -254,29 +348,28 @@ class HomePage extends StatelessWidget {
               LiveSafeSection(), // Added LiveSafe Section here
               const SizedBox(height: 20),
               Align(
-  alignment: Alignment.bottomRight,
-  child: Padding(
-    padding: const EdgeInsets.only(bottom: 30, right: 20),
-    child: ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SafetyBot()),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFF06292),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      ),
-      child: Text(
-        "safetybot".tr(),
-        style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
-      ),
-    ),
-  ),
-),
-
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 30, right: 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SafetyBot()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF06292),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    ),
+                    child: Text(
+                      "safetybot".tr(),
+                      style: GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -394,6 +487,7 @@ class LiveSafeSection extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       ),
+                      
                     ],
                   ),
                 );
@@ -401,6 +495,7 @@ class LiveSafeSection extends StatelessWidget {
             ),
           ),
         ],
+        
       ),
     );
   }
@@ -444,3 +539,4 @@ class OptionTile extends StatelessWidget {
     );
   }
 }
+

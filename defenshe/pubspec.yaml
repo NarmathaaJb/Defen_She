@@ -48,6 +48,7 @@ dependencies:
   easy_localization: ^3.0.7+1
   shared_preferences: 2.3.3
   liquid_swipe: ^3.1.0
+  speech_to_text: ^7.0.0
   
 
 dev_dependencies:
