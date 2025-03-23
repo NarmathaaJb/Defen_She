@@ -1,11 +1,10 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:defenshe/pages/auth_page.dart';
 import 'package:defenshe/pages/community_page.dart';
 import 'package:defenshe/pages/contact_page.dart';
+import 'package:defenshe/pages/feed_page.dart';
 import 'package:defenshe/pages/safetyBot.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:url_launcher/url_launcher.dart';
+
 
 
 
@@ -393,6 +393,12 @@ Future<void> _triggerSOS() async {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const CommunityPage()),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  FeedPage()),
               );
               break;
             case 4: // Logout
