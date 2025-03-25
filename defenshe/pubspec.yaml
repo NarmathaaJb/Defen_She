@@ -52,7 +52,6 @@ dependencies:
   xml: ^6.5.0
   html: ^0.15.5
   flutter_launcher_icons: ^0.14.3
-  camera: 0.11.0+2
   path_provider: ^2.1.5
 
 flutter_icons:
@@ -64,6 +63,8 @@ flutter_icons:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

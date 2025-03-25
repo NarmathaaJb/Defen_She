@@ -22,7 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
   static Future<void> openMap(String location) async{
     String googleUrl = 'https://www.google.com/maps/search/$location';
     final Uri url = Uri.parse(googleUrl);
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
 
 /*Future<void> sendSOS(String phoneNumber, String message) async
   {
-  
+
 
   final uri = Uri.parse('https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
   final response = await http.post(

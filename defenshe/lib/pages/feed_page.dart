@@ -6,6 +6,8 @@ import 'package:html/parser.dart' as htmlParser;
 
 
 class FeedPage extends StatefulWidget {
+  const FeedPage({super.key});
+
   @override
   _WomenNewsFeedPageState createState() => _WomenNewsFeedPageState();
 }
@@ -21,7 +23,7 @@ class _WomenNewsFeedPageState extends State<FeedPage> {
   }
 
   Future<void> fetchRssFeed() async {
-  final feedUrl = 'https://rss.app/feeds/tR2NXyyw6ucbhOmd.xml'; // Example feed
+  const feedUrl = 'https://rss.app/feeds/tR2NXyyw6ucbhOmd.xml'; // Example feed
   try {
     final response = await http.get(Uri.parse(feedUrl));
     final document = xml.XmlDocument.parse(response.body);
@@ -61,19 +63,19 @@ class _WomenNewsFeedPageState extends State<FeedPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF06292),
-        title: Text('Women News Feed', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text('Women News Feed', style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
       ),
       body: loading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : articles.isEmpty
-              ? Center(child: Text('No news found.'))
+              ? const Center(child: Text('No news found.'))
               : ListView.builder(
                   itemCount: articles.length,
                   itemBuilder: (context, index) {
                     final article = articles[index];
                     return Card(
-                      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -85,12 +87,12 @@ class _WomenNewsFeedPageState extends State<FeedPage> {
                           children: [
                             Text(
                               article['title'] ?? '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               article['description'] ?? '',
                               style: TextStyle(
@@ -100,17 +102,17 @@ class _WomenNewsFeedPageState extends State<FeedPage> {
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Align(
                               alignment: Alignment.bottomRight,
                               child: ElevatedButton.icon(
                                 onPressed: () =>
                                     _launchURL(article['link'] ?? ''),
-                                icon: Icon(Icons.open_in_new, size: 18, color: Colors.pink,),
-                                label: Text("Read More", style: TextStyle(color: Colors.pink),),
+                                icon: const Icon(Icons.open_in_new, size: 18, color: Colors.pink,),
+                                label: const Text("Read More", style: TextStyle(color: Colors.pink),),
                                 style: ElevatedButton.styleFrom(
-                                  shape: StadiumBorder(),
-                                  padding: EdgeInsets.symmetric(
+                                  shape: const StadiumBorder(),
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 16, vertical: 8),
                                 ),
                               ),
