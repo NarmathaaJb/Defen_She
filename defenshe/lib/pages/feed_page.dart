@@ -53,10 +53,17 @@ class _WomenNewsFeedPageState extends State<FeedPage> {
 
 
   void _launchURL(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  if (url.isNotEmpty && Uri.tryParse(url)?.isAbsolute == true) {
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      print('Could not launch: $url');
     }
+  } else {
+    print('Invalid URL: $url');
   }
+}
 
   @override
   Widget build(BuildContext context) {

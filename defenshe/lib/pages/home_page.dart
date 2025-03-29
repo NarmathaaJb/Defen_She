@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage> {
 
 /*Future<void> sendSOS(String phoneNumber, String message) async
   {
+  
 
 
   final uri = Uri.parse('https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json');
@@ -143,6 +144,7 @@ Future<void> _triggerSOS() async {
       final position = await _getCurrentLocation();
       final locationUrl =
           'https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}';
+
 
       final message = "🚨 EMERGENCY ALERT 🚨\nI need help! My location: $locationUrl";
 

@@ -43,17 +43,6 @@ class CommunityPage extends StatelessWidget {
               },
             ),
             CommunityCard(
-              imagePath: "assets/images/awareness.jpeg",
-              title: "Awareness",
-              description: "Understand the issue and learn how to help others.",
-              buttonText: "Explore", onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Awareness()),
-                );
-                },
-            ),
-            CommunityCard(
               imagePath: "assets/images/safety_tips.jpg",
               title: "Safety Tips",
               description: "Get tips on how to stay safe in various situations.",
@@ -64,6 +53,17 @@ class CommunityPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const SafetyTips()),
                 );
               },
+            ),
+            CommunityCard(
+              imagePath: "assets/images/awareness.jpeg",
+              title: "Awareness",
+              description: "Understand the issue and learn how to help others.",
+              buttonText: "Explore", onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Awareness()),
+                );
+                },
             ),
             CommunityCard(
               imagePath: "assets/images/support_group.jpg",

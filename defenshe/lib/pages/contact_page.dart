@@ -91,11 +91,11 @@ class _ContactPageState extends State<ContactPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: const InputDecoration(labelText: "Name"),
+                decoration: const InputDecoration(labelText: "Name", labelStyle: TextStyle(fontWeight: FontWeight.bold)),
                 onChanged: (value) => name = value,
               ),
               TextField(
-                decoration: const InputDecoration(labelText: "Phone Number"),
+                decoration: const InputDecoration(labelText: "Phone Number", labelStyle: TextStyle(fontWeight: FontWeight.bold)),
                 keyboardType: TextInputType.phone,
                 onChanged: (value) => number = value,
               ),
@@ -134,11 +134,11 @@ class _ContactPageState extends State<ContactPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: const InputDecoration(labelText: "Name"),
+                decoration: const InputDecoration(labelText: "Name", labelStyle: TextStyle(fontWeight: FontWeight.bold)),
                 controller: nameController,
               ),
               TextField(
-                decoration: const InputDecoration(labelText: "Phone Number"),
+                decoration: const InputDecoration(labelText: "Phone Number", labelStyle: TextStyle(fontWeight: FontWeight.bold)),
                 controller: numberController,
                 keyboardType: TextInputType.phone,
               ),
@@ -187,11 +187,11 @@ class _ContactPageState extends State<ContactPage> {
       ),
       title: Text(
         title,
-        style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500),
+        style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       subtitle: Text(
         number,
-        style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
+        style: GoogleFonts.montserrat(fontSize: 14, color: Colors.black),
       ),
       trailing: const Icon(Icons.call, color: Colors.black),
       onTap: () {
@@ -240,9 +240,9 @@ class _ContactPageState extends State<ContactPage> {
                                     backgroundColor: Color.fromARGB(255, 245, 224, 231),
                                     child: Icon(Icons.person, color: Color(0xFFF06292))),
                                 title: Text(contact['name'],
-                                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500)),
+                                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold)),
                                 subtitle: Text(contact['number'],
-                                    style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+                                    style: GoogleFonts.montserrat(fontSize: 14, color: Colors.black)),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

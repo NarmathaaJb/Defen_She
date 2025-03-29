@@ -59,16 +59,16 @@ class SelfDefence extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Workshops & Classes
+            // Classes
             const Text(
-              "Workshops & Online Classes",
+              "Online Videos",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             ElevatedButton(
-              onPressed: () => _launchURL("https://www.udemy.com/course/self-defense-training/"),
+              onPressed: () => _launchURL("https://www.youtube.com/watch?v=WCn4GBcs84s"),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.pink[200]),
-              child: const Text("View Online Self-Defense Course",style: TextStyle(color: Colors.black),),
+              child: const Text("The Most Effective Techniques",style: TextStyle(color: Colors.black),),
             ),
             const SizedBox(height: 20),
 
